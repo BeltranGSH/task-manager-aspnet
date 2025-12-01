@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="jumbotron mt-5">
+    <h1 class="display-4">Gestor de Tareas Personalizado</h1>
+    <p class="lead">Organiza tus tareas de manera eficiente con prioridades y filtros.</p>
+    <hr class="my-4">
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <a class="btn btn-primary btn-lg" asp-controller="Tasks" asp-action="Index" role="button">Ver Mis Tareas</a>
+    }
+    else
+    {
+        <p>Inicia sesión para comenzar a gestionar tus tareas.</p>
+        <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login" role="button">Iniciar Sesión</a>
+        <a class="btn btn-success btn-lg" asp-controller="Account" asp-action="Register" role="button">Registrarse</a>
+    }
+</div>
