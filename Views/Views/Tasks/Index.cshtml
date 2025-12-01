@@ -1,0 +1,76 @@
+@model List<TaskManager.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "Mis Tareas";
+}
+
+<div class="mt-5">
+    <h2>Mis Tareas</h2>
+
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Nueva Tarea</a>
+    </div>
+
+    <div class="mb-3">
+        <form method="get" asp-action="Index" class="row g-3">
+            <div class="col-md-4">
+                <select name="priorityFilter" class="form-select">
+                    <option value="">Todas las prioridades</option>
+                    <option value="1">Baja</option>
+                    <option value="2">Media</option>
+                    <option value="3">Alta</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="sortOrder" class="form-select">
+                    <option value="">Orden por defecto</option>
+                    <option value="priority">Por Prioridad</option>
+                    <option value="date">Por Fecha</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <p>No tienes tareas. <a asp-action="Create">Crear una nueva</a></p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                    <tr>
+                        <td>@task.Title</td>
+                        <td>
+                            <span class="badge bg-@(task.Priority == TaskManager.Models.PriorityLevel.Alta ? "danger" : task.Priority == TaskManager.Models.PriorityLevel.Media ? "warning" : "success")">
+                                @task.Priority
+                            </span>
+                        </td>
+                        <td>@(task.IsCompleted ? "Completada" : "Pendiente")</td>
+                        <td>@(task.DueDate?.ToShortDateString() ?? "N/A")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-warning">Editar</a>
+                            <form asp-action="Delete" asp-route-id="@task.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
